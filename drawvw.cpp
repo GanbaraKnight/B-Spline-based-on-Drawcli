@@ -53,6 +53,7 @@ BEGIN_MESSAGE_MAP(CDrawView, CScrollView)
 	ON_COMMAND(ID_DRAW_LINE, OnDrawLine)
 	ON_COMMAND(ID_DRAW_ELLIPSE, OnDrawEllipse)
 	ON_COMMAND(ID_DRAW_CIRCLE, OnDrawCircle)
+	ON_COMMAND(ID_DRAW_B, OnDrawBSpline)
 	ON_UPDATE_COMMAND_UI(ID_DRAW_ELLIPSE, OnUpdateDrawEllipse)
 	ON_UPDATE_COMMAND_UI(ID_DRAW_LINE, OnUpdateDrawLine)
 	ON_UPDATE_COMMAND_UI(ID_DRAW_RECT, OnUpdateDrawRect)
@@ -786,6 +787,11 @@ void CDrawView::OnDrawPolygon()
 void CDrawView::OnDrawCircle()
 {
 	CDrawTool::c_drawShape = circle;
+}
+
+void CDrawView::OnDrawBSpline()
+{
+	CDrawTool::c_drawShape = bspline;
 }
 
 void CDrawView::OnUpdateDrawEllipse(CCmdUI* pCmdUI)

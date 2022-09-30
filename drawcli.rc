@@ -152,6 +152,7 @@ BEGIN
         MENUITEM "&Ellipse",                    ID_DRAW_ELLIPSE
         MENUITEM "&Polygon",                    ID_DRAW_POLYGON
         MENUITEM "Circle",                      ID_DRAW_CIRCLE
+        MENUITEM "B-Spline",                    ID_DRAW_B
     END
     POPUP "&Object"
     BEGIN
@@ -453,6 +454,7 @@ BEGIN
     BUTTON      ID_DRAW_ELLIPSE
     BUTTON      ID_DRAW_POLYGON
     BUTTON      ID_DRAW_CIRCLE
+    BUTTON      ID_DRAW_B
     SEPARATOR
     BUTTON      ID_FILE_PRINT
     BUTTON      ID_APP_ABOUT
@@ -613,7 +615,7 @@ BEGIN
     ID_OBJECT_MOVEBACK      "Move object to previous position in z-order"
     ID_VIEW_PAPERCOLOR      "Change paper color displayed while editing"
     ID_DRAW_POLYGON         "Choose the polygon drawing tool\nPolygon Tool"
-    // ID_DRAW_CIRCLE          "Choose the circle drawing tool\nCircle Tool"
+    ID_DRAW_B               "Choose B-spline drawing tool\nB-spline Tool"
 END
 
 STRINGTABLE
@@ -622,6 +624,7 @@ BEGIN
     ID_EDIT_PROPERTIES      "Edit drawing object properties"
     ID_FILE_SUMMARYINFO     "Display summary information"
 END
+
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

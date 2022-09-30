@@ -123,6 +123,7 @@ protected:
 	afx_msg void OnDrawLine();
 	afx_msg void OnDrawEllipse();
 	afx_msg void OnDrawCircle();
+	afx_msg void OnDrawBSpline();
 	afx_msg void OnUpdateDrawEllipse(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateDrawLine(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateDrawRect(CCmdUI* pCmdUI);

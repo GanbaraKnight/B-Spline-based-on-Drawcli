@@ -56,13 +56,14 @@
 #define ID_BUTTON32810                  -32726
 #define ID_BUTTON32811                  -32725
 #define ID_DRAW_CIRCLE                  32812
+#define ID_DRAW_B                       32813
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        110
-#define _APS_NEXT_COMMAND_VALUE         32813
+#define _APS_NEXT_COMMAND_VALUE         32814
 #define _APS_NEXT_CONTROL_VALUE         124
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

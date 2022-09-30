@@ -145,6 +145,17 @@ protected:
 	friend class CPolyTool;
 };
 
+/////////////////////////////////////////////////////////////////////////////
+
+class CDrawBSpline : public CDrawPoly
+{
+public:
+	DECLARE_SERIAL(CDrawBSpline);
+	CDrawBSpline();
+	CDrawBSpline(const CRect& position);
+	virtual ~CDrawBSpline();
+};
+
 class CDrawItem;    // COleClientItem derived class
 
 class CDrawOleObj : public CDrawObj

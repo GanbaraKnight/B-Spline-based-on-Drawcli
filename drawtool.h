@@ -25,7 +25,8 @@ enum DrawShape
 	roundRect,
 	ellipse,
 	poly,
-	circle
+	circle,
+	bspline
 };
 
 class CDrawTool
@@ -84,7 +85,7 @@ class CPolyTool : public CDrawTool
 {
 // Constructors
 public:
-	CPolyTool();
+	CPolyTool(DrawShape drawShape);
 
 // Implementation
 	virtual void OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point);

@@ -797,7 +797,13 @@ void CDrawPoly::Draw(CDC* pDC)
 	else
 		pOldPen = (CPen*)pDC->SelectStockObject(NULL_PEN);
 
-	pDC->Polygon(m_points, m_nPoints);
+	// pDC->Polygon(m_points, m_nPoints);
+	for (int i = 0; i < m_nPoints - 1; )
+	{
+		pDC->MoveTo(m_points[i]);
+		i++;
+		pDC->LineTo(m_points[i]);
+	}
 
 	pDC->SelectObject(pOldBrush);
 	pDC->SelectObject(pOldPen);
@@ -965,6 +971,24 @@ BOOL CDrawPoly::RecalcBounds(CDrawView* pView)
 	return TRUE;
 }
 
+////////////////////////////////////////////////////////////////////////////
+// CDrawPoly
+
+CDrawBSpline::CDrawBSpline()
+{
+	CDrawPoly();
+}
+
+CDrawBSpline::CDrawBSpline(const CRect& position) 
+	:CDrawPoly(position)
+{
+
+}
+
+CDrawBSpline::~CDrawBSpline()
+{
+	
+}
 ////////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_SERIAL(CDrawOleObj, CDrawObj, 0)

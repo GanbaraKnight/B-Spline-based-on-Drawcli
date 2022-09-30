@@ -27,8 +27,9 @@ static CRectTool lineTool(line);
 static CRectTool rectTool(rect);
 static CRectTool roundRectTool(roundRect);
 static CRectTool ellipseTool(ellipse);
-static CPolyTool polyTool;
 static CRectTool circleTool(circle);
+static CPolyTool polyTool(poly);
+static CPolyTool bsplineTool(bspline);
 
 CPoint CDrawTool::c_down;
 UINT CDrawTool::c_nDownFlags;
@@ -368,8 +369,8 @@ void CRectTool::OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point)
 ////////////////////////////////////////////////////////////////////////////
 // CPolyTool
 
-CPolyTool::CPolyTool()
-	: CDrawTool(poly)
+CPolyTool::CPolyTool(DrawShape drawShape)
+	: CDrawTool(m_drawShape)
 {
 	m_pDrawObj = NULL;
 }
@@ -377,42 +378,60 @@ CPolyTool::CPolyTool()
 void CPolyTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point)
 {
 	CDrawTool::OnLButtonDown(pView, nFlags, point);
-
 	CPoint local = point;
 	pView->ClientToDoc(local);
 
-	if (m_pDrawObj == NULL)
+	switch (m_drawShape)
 	{
-		pView->SetCapture();
+	default:
+		ASSERT(FALSE); // unsuported shape!
 
-		m_pDrawObj = new CDrawPoly(CRect(local, CSize(0, 0)));
-		pView->GetDocument()->Add(m_pDrawObj);
-		pView->Select(m_pDrawObj);
-		m_pDrawObj->AddPoint(local, pView);
-	}
-	else if (local == m_pDrawObj->m_points[0])
-	{
-		// Stop when the first point is repeated...
-		ReleaseCapture();
-		m_pDrawObj->m_nPoints -= 1;
-		if (m_pDrawObj->m_nPoints < 2)
+	case poly:
+		if (m_pDrawObj == NULL)
 		{
-			m_pDrawObj->Remove();
+			pView->SetCapture();
+
+			m_pDrawObj = new CDrawPoly(CRect(local, CSize(0, 0)));
+			pView->GetDocument()->Add(m_pDrawObj);
+			pView->Select(m_pDrawObj);
+			m_pDrawObj->AddPoint(local, pView);
 		}
-		else
+		else if (std::abs(local.x - m_pDrawObj->m_points[0].x) < 10 && std::abs(local.y - m_pDrawObj->m_points[0].y) < 10)
 		{
-			pView->InvalObj(m_pDrawObj);
+			// Stop when the first point is repeated...
+			ReleaseCapture();
+			m_pDrawObj->m_nPoints -= 1;
+			if (m_pDrawObj->m_nPoints < 2)
+			{
+				m_pDrawObj->Remove();
+			}
+			else
+			{
+				pView->InvalObj(m_pDrawObj);
+			}
+			m_pDrawObj = NULL;
+			c_drawShape = selection;
+			return;
 		}
-		m_pDrawObj = NULL;
-		c_drawShape = selection;
-		return;
+		break;
+
+	case bspline:
+		if (m_pDrawObj == NULL)
+		{
+			pView->SetCapture();
+
+			m_pDrawObj = new CDrawBSpline(CRect(local, CSize(0, 0)));
+			pView->GetDocument()->Add(m_pDrawObj);
+			pView->Select(m_pDrawObj);
+			m_pDrawObj->AddPoint(local, pView);
+		}
+		break;
 	}
 
 	local.x += 1; // adjacent points can't be the same!
 	m_pDrawObj->AddPoint(local, pView);
-
-	selectMode = size;
 	nDragHandle = m_pDrawObj->GetHandleCount();
+	selectMode = size;
 	lastPoint = local;
 }
 
