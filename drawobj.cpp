@@ -649,6 +649,10 @@ BOOL CDrawRect::Intersects(const CRect& rect)
 		rgn.CreateEllipticRgnIndirect(fixed);
 		break;
 
+	case circle:
+		rgn.CreateEllipticRgnIndirect(fixed);
+		break;
+
 	case line:
 		{
 			int x = (m_logpen.lopnWidth.x + 5) / 2;
