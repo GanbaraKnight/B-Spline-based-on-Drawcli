@@ -465,9 +465,9 @@ void CDrawRect::Draw(CDC* pDC)
 	CBrush brush;
 	if (!brush.CreateBrushIndirect(&m_logbrush))
 		return;
-	CPen pen;
-	if (!pen.CreatePenIndirect(&m_logpen))
-		return;
+	 CPen pen;
+	 if (!pen.CreatePenIndirect(&m_logpen))
+		 return;
 
 	CBrush* pOldBrush;
 	CPen* pOldPen;
@@ -797,13 +797,15 @@ void CDrawPoly::Draw(CDC* pDC)
 	else
 		pOldPen = (CPen*)pDC->SelectStockObject(NULL_PEN);
 
-	// pDC->Polygon(m_points, m_nPoints);
-	for (int i = 0; i < m_nPoints - 1; )
+	pDC->Polygon(m_points, m_nPoints);
+	// file_logger->info("Number of Points: {0:d}", m_nPoints);
+	// file_logger->flush();
+	/*for (int i = 0; i < m_nPoints - 1; )
 	{
 		pDC->MoveTo(m_points[i]);
 		i++;
 		pDC->LineTo(m_points[i]);
-	}
+	}*/
 
 	pDC->SelectObject(pOldBrush);
 	pDC->SelectObject(pOldPen);
@@ -977,13 +979,68 @@ BOOL CDrawPoly::RecalcBounds(CDrawView* pView)
 CDrawBSpline::CDrawBSpline()
 	:CDrawPoly()
 {
-	
+	control_num = m_nPoints;
+	knot_num = 0;
+	order = 3;
 }
 
 CDrawBSpline::CDrawBSpline(const CRect& position) 
 	:CDrawPoly(position)
 {
+	control_num = m_nPoints;
+	knot_num = 0;
+	order = 3;
+}
 
+void CDrawBSpline::AddPoint(const CPoint& point, CDrawView* pView = NULL)
+{
+	CDrawPoly::AddPoint(point, pView);
+	control_num++;
+}
+
+void CDrawBSpline::Draw(CDC* pDC)
+{
+	ASSERT_VALID(this);
+
+	CBrush brush;
+	if (!brush.CreateBrushIndirect(&m_logbrush))
+		return;
+	m_logpen.lopnStyle = PS_DASH;
+	CPen pen;
+	if (!pen.CreatePenIndirect(&m_logpen))
+		return;
+	m_logpen.lopnStyle = PS_INSIDEFRAME;
+
+	CBrush* pOldBrush;
+	CPen* pOldPen;
+
+	if (m_bBrush)
+		pOldBrush = pDC->SelectObject(&brush);
+	else
+		pOldBrush = (CBrush*)pDC->SelectStockObject(NULL_BRUSH);
+
+	if (m_bPen)
+		pOldPen = pDC->SelectObject(&pen);
+	else
+		pOldPen = (CPen*)pDC->SelectStockObject(NULL_PEN);
+
+	// pDC->Polygon(m_points, m_nPoints);
+	// file_logger->info("Number of Points: {0:d}", m_nPoints);
+	// file_logger->flush();
+	for (int i = 0; i < m_nPoints - 1; )
+	{
+		pDC->MoveTo(m_points[i]);
+		i++;
+		pDC->LineTo(m_points[i]);
+	}
+
+	pDC->SelectObject(pOldBrush);
+	pDC->SelectObject(pOldPen);
+}
+
+CPoint CDrawBSpline::deBoor(double t)
+{
+	return CPoint();
 }
 
 CDrawBSpline::~CDrawBSpline()

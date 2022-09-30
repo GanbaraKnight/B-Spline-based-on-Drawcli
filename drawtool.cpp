@@ -387,6 +387,7 @@ void CPolyTool::OnLButtonDown(CDrawView* pView, UINT nFlags, const CPoint& point
 		ASSERT(FALSE); // unsuported shape!
 
 	case poly:
+		// Click the document dialog before put the first point
 		if (m_pDrawObj == NULL)
 		{
 			pView->SetCapture();

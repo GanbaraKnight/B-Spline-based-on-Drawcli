@@ -120,7 +120,7 @@ public:
 	CDrawPoly(const CRect& position);
 
 // Operations
-	void AddPoint(const CPoint& point, CDrawView* pView = NULL);
+	virtual void AddPoint(const CPoint& point, CDrawView* pView = NULL);
 	BOOL RecalcBounds(CDrawView* pView = NULL);
 
 // Implementation
@@ -153,7 +153,14 @@ public:
 	// DECLARE_SERIAL(CDrawBSpline); // Link Error LNK1120 and LNK2001
 	CDrawBSpline();
 	CDrawBSpline(const CRect& position);
+	virtual void AddPoint(const CPoint& point, CDrawView* pView = NULL);
+	virtual void Draw(CDC* pDC);
+	CPoint deBoor(double t);
 	virtual ~CDrawBSpline();
+
+	int order;
+	int control_num;
+	int knot_num;
 
 	friend class CPolyTool;
 };
