@@ -27,8 +27,8 @@ static CRectTool lineTool(line);
 static CRectTool rectTool(rect);
 static CRectTool roundRectTool(roundRect);
 static CRectTool ellipseTool(ellipse);
-static CRectTool circleTool(circle);
 static CPolyTool polyTool(poly);
+static CRectTool circleTool(circle);
 static CPolyTool bsplineTool(bspline);
 
 CPoint CDrawTool::c_down;
@@ -370,7 +370,7 @@ void CRectTool::OnMouseMove(CDrawView* pView, UINT nFlags, const CPoint& point)
 // CPolyTool
 
 CPolyTool::CPolyTool(DrawShape drawShape)
-	: CDrawTool(m_drawShape)
+	: CDrawTool(drawShape)
 {
 	m_pDrawObj = NULL;
 }
