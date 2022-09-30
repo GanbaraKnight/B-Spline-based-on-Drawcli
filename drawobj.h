@@ -150,10 +150,12 @@ protected:
 class CDrawBSpline : public CDrawPoly
 {
 public:
-	DECLARE_SERIAL(CDrawBSpline);
+	// DECLARE_SERIAL(CDrawBSpline); // Link Error LNK1120 and LNK2001
 	CDrawBSpline();
 	CDrawBSpline(const CRect& position);
 	virtual ~CDrawBSpline();
+
+	friend class CPolyTool;
 };
 
 class CDrawItem;    // COleClientItem derived class

@@ -975,8 +975,9 @@ BOOL CDrawPoly::RecalcBounds(CDrawView* pView)
 // CDrawPoly
 
 CDrawBSpline::CDrawBSpline()
+	:CDrawPoly()
 {
-	CDrawPoly();
+	
 }
 
 CDrawBSpline::CDrawBSpline(const CRect& position) 
