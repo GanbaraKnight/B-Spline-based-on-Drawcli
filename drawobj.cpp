@@ -980,22 +980,39 @@ CDrawBSpline::CDrawBSpline()
 	:CDrawPoly()
 {
 	control_num = m_nPoints;
-	knot_num = 0;
 	order = 3;
+	knot_num = control_num + order + 1;
+
+	for (int i = 0; i < 100; i++)
+	{
+		knot[i] = 0.0;
+	}
 }
 
 CDrawBSpline::CDrawBSpline(const CRect& position) 
 	:CDrawPoly(position)
 {
 	control_num = m_nPoints;
-	knot_num = 0;
 	order = 3;
+	knot_num = control_num + order + 1;
+
+	for (int i = 0; i < 100; i++)
+	{
+		knot[i] = 0.0;
+	}
 }
 
-void CDrawBSpline::AddPoint(const CPoint& point, CDrawView* pView = NULL)
+void CDrawBSpline::AddPoint(const CPoint& point, CDrawView* pView)
 {
 	CDrawPoly::AddPoint(point, pView);
-	control_num++;
+	control_num = m_nPoints;
+	knot_num = control_num + order + 1;
+	double step = 1.0 / (double)(knot_num - 1);
+	for (int i = 0; i < knot_num; i++)
+	{
+		knot[i] = (double)i * step;
+	}
+	int j = 0;
 }
 
 void CDrawBSpline::Draw(CDC* pDC)
@@ -1024,9 +1041,7 @@ void CDrawBSpline::Draw(CDC* pDC)
 	else
 		pOldPen = (CPen*)pDC->SelectStockObject(NULL_PEN);
 
-	// pDC->Polygon(m_points, m_nPoints);
-	// file_logger->info("Number of Points: {0:d}", m_nPoints);
-	// file_logger->flush();
+	// Draw Control Polygon
 	for (int i = 0; i < m_nPoints - 1; )
 	{
 		pDC->MoveTo(m_points[i]);
@@ -1034,19 +1049,62 @@ void CDrawBSpline::Draw(CDC* pDC)
 		pDC->LineTo(m_points[i]);
 	}
 
+	// Draw Spline
+	if (control_num > 2)
+	{
+		CPen curve_pen;
+		if (!curve_pen.CreatePenIndirect(&m_logpen))
+			return;
+		if (m_bPen)
+			pDC->SelectObject(&curve_pen);
+		else
+			(CPen*)pDC->SelectStockObject(NULL_PEN);
+
+		double step = 1.0 / (double)(interpolation_num - 1);
+		for (int i = 0; i < interpolation_num - 1; )
+		{
+			pDC->MoveTo(deBoor(i * step));
+			i++;
+			pDC->LineTo(deBoor(i * step));
+		}
+	}
+	
 	pDC->SelectObject(pOldBrush);
 	pDC->SelectObject(pOldPen);
 }
 
 CPoint CDrawBSpline::deBoor(double t)
 {
-	return CPoint();
+	CPoint point(0, 0);
+	for (int i = 0; i < control_num; i++)
+	{
+		point.x += m_points[i].x * base_function(t, i, order);
+		point.y += m_points[i].y * base_function(t, i, order);
+	}
+	return point;
+}
+
+double CDrawBSpline::base_function(double t, int i, int m_order)
+{
+	if (m_order == 0)
+	{
+		if (t > knot[i] && t < knot[i + 1])
+			return 1.0;
+		else
+			return 0.0;
+	}
+	else
+	{
+		return base_function(t, i, m_order - 1) * (t - knot[i]) / (knot[i + m_order] - knot[i])
+			+ base_function(t, i + 1, m_order - 1) * (knot[i + m_order + 1] - t) / (knot[i + m_order + 1] - knot[i + 1]);
+	}
 }
 
 CDrawBSpline::~CDrawBSpline()
 {
 	
 }
+
 ////////////////////////////////////////////////////////////////////////////
 
 IMPLEMENT_SERIAL(CDrawOleObj, CDrawObj, 0)

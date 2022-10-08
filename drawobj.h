@@ -161,6 +161,11 @@ public:
 	int order;
 	int control_num;
 	int knot_num;
+	double knot[100];
+	const int interpolation_num = 1000;
+
+protected:
+	double base_function(double t, int i, int m_order);
 
 	friend class CPolyTool;
 };
