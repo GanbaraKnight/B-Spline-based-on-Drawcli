@@ -1060,12 +1060,14 @@ void CDrawBSpline::Draw(CDC* pDC)
 		else
 			(CPen*)pDC->SelectStockObject(NULL_PEN);
 
-		double step = 1.0 / (double)(interpolation_num - 1);
+		double start = knot[order] + 0.01;
+		double end = knot[knot_num - 1 - order] - 0.01;
+		double step = (end - start) / (double)(interpolation_num - 1);
 		for (int i = 0; i < interpolation_num - 1; )
 		{
-			pDC->MoveTo(deBoor(i * step));
+			pDC->MoveTo(deBoor(i * step + start));
 			i++;
-			pDC->LineTo(deBoor(i * step));
+			pDC->LineTo(deBoor(i * step + start));
 		}
 	}
 	
@@ -1076,10 +1078,12 @@ void CDrawBSpline::Draw(CDC* pDC)
 CPoint CDrawBSpline::deBoor(double t)
 {
 	CPoint point(0, 0);
+	double weight = 0.0;
 	for (int i = 0; i < control_num; i++)
 	{
-		point.x += m_points[i].x * base_function(t, i, order);
-		point.y += m_points[i].y * base_function(t, i, order);
+		weight = base_function(t, i, order);
+		point.x += m_points[i].x * weight;
+		point.y += m_points[i].y * weight;
 	}
 	return point;
 }
