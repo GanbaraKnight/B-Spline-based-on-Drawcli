@@ -1053,6 +1053,8 @@ void CDrawBSpline::Draw(CDC* pDC)
 	if (control_num > 2)
 	{
 		CPen curve_pen;
+		m_logpen.lopnWidth.x = 3;
+		m_logpen.lopnWidth.y = 3;
 		if (!curve_pen.CreatePenIndirect(&m_logpen))
 			return;
 		if (m_bPen)
@@ -1069,6 +1071,9 @@ void CDrawBSpline::Draw(CDC* pDC)
 			i++;
 			pDC->LineTo(deBoor(i * step + start));
 		}
+
+		m_logpen.lopnWidth.x = 1;
+		m_logpen.lopnWidth.y = 1;
 	}
 	
 	pDC->SelectObject(pOldBrush);
@@ -1082,8 +1087,8 @@ CPoint CDrawBSpline::deBoor(double t)
 	for (int i = 0; i < control_num; i++)
 	{
 		weight = base_function(t, i, order);
-		point.x += m_points[i].x * weight;
-		point.y += m_points[i].y * weight;
+		point.x += std::floor(m_points[i].x * weight + 0.5);
+		point.y += std::floor(m_points[i].y * weight + 0.5);
 	}
 	return point;
 }

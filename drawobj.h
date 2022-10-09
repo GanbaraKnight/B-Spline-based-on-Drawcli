@@ -163,7 +163,7 @@ public:
 	int control_num;
 	int knot_num;
 	double knot[100];
-	const int interpolation_num = 1000;
+	const int interpolation_num = 100;
 
 protected:
 	double base_function(double t, int i, int m_order);
